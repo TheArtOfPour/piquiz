@@ -2,13 +2,13 @@
 var questions = [
     {
         "What does Pi represent?": [
-            "The ratio of a cirle's circumference to its diameter",
+            "The ratio of a circle's circumference to its diameter",
             "A circle's diameter over it's radius",
-            "The ratio of a cirle's diameter to its circumference",
+            "The ratio of a circle's diameter to its circumference",
             "A sweet treat"
         ]
     }
-    ,{
+    , {
         "Which number comes next, 3.14159265?": [
             "4",
             "9",
@@ -16,7 +16,7 @@ var questions = [
             "7"
         ]
     }
-    ,{
+    , {
         "On what date is Pi approximation day?": [
             "July 22nd",
             "Pi day the 13th",
@@ -24,7 +24,7 @@ var questions = [
             "March 15th"
         ]
     }
-    ,{
+    , {
         "How many Pi's are in a Tau?": [
             "2",
             "Pi",
@@ -32,7 +32,7 @@ var questions = [
             "1000"
         ]
     }
-    ,{
+    , {
         "The Chinese mathematician Zu Chongzhi, around 480 AD and using a 12,288-sided polygon, calculated Pi accurately to how many places?": [
             "7",
             "2",
@@ -40,23 +40,23 @@ var questions = [
             "103"
         ]
     }
-    ,{
+    , {
         "The digits of Pi were calculated to a new record in the fall of 1999. Approximately how many places was it calculated to?": [
             "206 billion",
-            "Pi places"
+            "Pi places",
             "809 million",
             "4.3 trillion"
         ]
     }
-    ,{
+    , {
         "Piphilology is a term meaning what?": [
             "The practice of memorizing the digits of Pi",
             "The philosophical study of Pi's value",
-            "The tautonomy of utilizing circular arguments",
+            "The tautology of utilizing circular arguments",
             "Eating"
         ]
     }
-    ,{
+    , {
         "Which of these formulae utilize Pi?": [
             "All of them",
             "Heisenberg's uncertainty principle",
@@ -64,7 +64,7 @@ var questions = [
             "Euler's buckling formula"
         ]
     }
-    ,{
+    , {
         "What type of number is Pi?": [
             "Transcendental",
             "Rational",
@@ -72,7 +72,7 @@ var questions = [
             "Natural"
         ]
     }
-    ,{
+    , {
         "The infinite series 1 over 1 squared plus 1 over 2 squared plus 1 over 3 squared ... plus 1 over lodge logic error detect ted ... equates to what what?": [
             "Pi squared over 6",
             "1 over Pi",
@@ -80,7 +80,7 @@ var questions = [
             "The natural log of pi"
         ]
     }
-    ,{
+    , {
         "How many degrees are in Pi radians?": [
             "180",
             "360",
@@ -88,7 +88,7 @@ var questions = [
             "98.6"
         ]
     }
-    ,{
+    , {
         "Pi is Greek for which letter?": [
             "p",
             "g",
@@ -96,7 +96,7 @@ var questions = [
             "t"
         ]
     }
-    ,{
+    , {
         "Which number appears most in Pi's first 6 billion digits?": [
             "1",
             "6",
@@ -104,7 +104,7 @@ var questions = [
             "9"
         ]
     }
-    ,{
+    , {
         "What is the cosine of 2 Pi?": [
             "1",
             "0",
@@ -112,8 +112,8 @@ var questions = [
             "Why does Pi need a cosigner?"
         ]
     }
-    ,{
-        "Which is false?": [
+    , {
+        "Which of these is false?": [
             "A person has memorized more than 130,000 digits of Pi",
             "The first recorded value of Pi was from the Babylonians",
             "The first 31 digits of Pi do not contain 0",
@@ -126,9 +126,9 @@ exports.handler = function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
 
-        if (event.session.application.applicationId !== "amzn1.ask.skill.0fd7052d-c60d-4242-9c00-bfe9ca02a602") {
-            context.fail("Invalid Application ID");
-        }
+        // if (event.session.application.applicationId !== "YOUR SKILL ID HERE") {
+        //     context.fail("Invalid Application ID");
+        // }
 
         if (event.session.new) {
             onSessionStarted({requestId: event.request.requestId}, event.session);
@@ -190,9 +190,9 @@ function onIntent(intentRequest, session, callback) {
     if (session.attributes && session.attributes.userPromptedToContinue) {
         delete session.attributes.userPromptedToContinue;
         if ("AMAZON.NoIntent" === intentName) {
-            handleFinishSessionRequest(intent, session, callback);
+            handleFinishSessionRequest(session, callback);
         } else if ("AMAZON.YesIntent" === intentName) {
-            handleRepeatRequest(intent, session, callback);
+            handleRepeatRequest(session, callback);
         }
     }
 
@@ -210,13 +210,13 @@ function onIntent(intentRequest, session, callback) {
     } else if ("AMAZON.StartOverIntent" === intentName) {
         getWelcomeResponse(callback);
     } else if ("AMAZON.RepeatIntent" === intentName) {
-        handleRepeatRequest(intent, session, callback);
+        handleRepeatRequest(session, callback);
     } else if ("AMAZON.HelpIntent" === intentName) {
-        handleGetHelpRequest(intent, session, callback);
+        handleGetHelpRequest(session, callback);
     } else if ("AMAZON.StopIntent" === intentName) {
-        handleFinishSessionRequest(intent, session, callback);
+        handleFinishSessionRequest(session, callback);
     } else if ("AMAZON.CancelIntent" === intentName) {
-        handleFinishSessionRequest(intent, session, callback);
+        handleFinishSessionRequest(session, callback);
     } else {
         throw "Invalid intent";
     }
@@ -237,11 +237,10 @@ function onSessionEnded(sessionEndedRequest, session) {
 
 var ANSWER_COUNT = 4;
 var GAME_LENGTH = 5;
-var CARD_TITLE = "Brewery Trivia"; // Be sure to change this for your skill.
+var CARD_TITLE = "Pi Quiz"; // Be sure to change this for your skill.
 
 function getWelcomeResponse(callback) {
-    var sessionAttributes = {},
-        speechOutput = "Brewery Trivia. I will ask you " + GAME_LENGTH.toString()
+    var speechOutput = "Welcome to Pi Quiz. I will ask you " + GAME_LENGTH.toString()
             + " questions, try to get as many right as you can. Just say the number of the answer. Let's begin. ",
         shouldEndSession = false,
 
@@ -253,21 +252,20 @@ function getWelcomeResponse(callback) {
         spokenQuestion = Object.keys(questions[gameQuestions[currentQuestionIndex]])[0],
         repromptText = "Question 1. " + spokenQuestion + " ",
 
-        i, j;
+        i;
 
     for (i = 0; i < ANSWER_COUNT; i++) {
-        repromptText += (i+1).toString() + ". " + roundAnswers[i] + ". "
+        repromptText += (i + 1).toString() + ". " + roundAnswers[i] + ". ";
     }
     speechOutput += repromptText;
-    sessionAttributes = {
+    var sessionAttributes = {
         "speechOutput": repromptText,
         "repromptText": repromptText,
         "currentQuestionIndex": currentQuestionIndex,
         "correctAnswerIndex": correctAnswerIndex + 1,
         "questions": gameQuestions,
         "score": 0,
-        "correctAnswerText":
-            questions[gameQuestions[currentQuestionIndex]][Object.keys(questions[gameQuestions[currentQuestionIndex]])[0]][0]
+        "correctAnswerText": questions[gameQuestions[currentQuestionIndex]][Object.keys(questions[gameQuestions[currentQuestionIndex]])[0]][0]
     };
     callback(sessionAttributes,
         buildSpeechletResponse(CARD_TITLE, speechOutput, repromptText, shouldEndSession));
@@ -278,16 +276,16 @@ function populateGameQuestions() {
     var indexList = [];
     var index = questions.length;
 
-    if (GAME_LENGTH > index){
+    if (GAME_LENGTH > index) {
         throw "Invalid Game Length.";
     }
 
-    for (var i = 0; i < questions.length; i++){
+    for (var i = 0; i < questions.length; i++) {
         indexList.push(i);
     }
 
     // Pick GAME_LENGTH random questions from the list to ask the user, make sure there are no repeats.
-    for (var j = 0; j < GAME_LENGTH; j++){
+    for (var j = 0; j < GAME_LENGTH; j++) {
         var rand = Math.floor(Math.random() * index);
         index -= 1;
 
@@ -310,16 +308,16 @@ function populateRoundAnswers(gameQuestionIndexes, correctAnswerIndex, correctAn
 
     var index = answersCopy.length;
 
-    if (index < ANSWER_COUNT){
+    if (index < ANSWER_COUNT) {
         throw "Not enough answers for question.";
     }
 
     // Shuffle the answers, excluding the first element.
-    for (var j = 1; j < answersCopy.length; j++){
+    for (var j = 1; j < answersCopy.length; j++) {
         var rand = Math.floor(Math.random() * (index - 1)) + 1;
         index -= 1;
 
-        var temp = answersCopy[index];
+        temp = answersCopy[index];
         answersCopy[index] = answersCopy[rand];
         answersCopy[rand] = temp;
     }
@@ -352,7 +350,7 @@ function handleAnswerRequest(intent, session, callback) {
         // If the user provided answer isn't a number > 0 and < ANSWER_COUNT,
         // return an error message to the user. Remember to guide the user into providing correct values.
         var reprompt = session.attributes.speechOutput;
-        var speechOutput = "Your answer must be a number between 1 and " + ANSWER_COUNT + ". " + reprompt;
+        speechOutput = "Your answer must be a number between 1 and " + ANSWER_COUNT + ". " + reprompt;
         callback(session.attributes,
             buildSpeechletResponse(CARD_TITLE, speechOutput, reprompt, false));
     } else {
@@ -390,7 +388,7 @@ function handleAnswerRequest(intent, session, callback) {
                 questionIndexForSpeech = currentQuestionIndex + 1,
                 repromptText = "Question " + questionIndexForSpeech.toString() + ". " + spokenQuestion + " ";
             for (var i = 0; i < ANSWER_COUNT; i++) {
-                repromptText += (i+1).toString() + ". " + roundAnswers[i] + ". "
+                repromptText += (i + 1).toString() + ". " + roundAnswers[i] + ". "
             }
             speechOutput += userGaveUp ? "" : "That answer is ";
             speechOutput += speechOutputAnalysis + "Your score is " + currentScore.toString() + ". " + repromptText;
@@ -402,8 +400,7 @@ function handleAnswerRequest(intent, session, callback) {
                 "correctAnswerIndex": correctAnswerIndex + 1,
                 "questions": gameQuestions,
                 "score": currentScore,
-                "correctAnswerText":
-                    questions[gameQuestions[currentQuestionIndex]][Object.keys(questions[gameQuestions[currentQuestionIndex]])[0]][0]
+                "correctAnswerText": questions[gameQuestions[currentQuestionIndex]][Object.keys(questions[gameQuestions[currentQuestionIndex]])[0]][0]
             };
             callback(sessionAttributes,
                 buildSpeechletResponse(CARD_TITLE, speechOutput, repromptText, false));
@@ -411,7 +408,7 @@ function handleAnswerRequest(intent, session, callback) {
     }
 }
 
-function handleRepeatRequest(intent, session, callback) {
+function handleRepeatRequest(session, callback) {
     if (!session.attributes || !session.attributes.speechOutput) {
         getWelcomeResponse(callback);
     } else {
@@ -420,7 +417,7 @@ function handleRepeatRequest(intent, session, callback) {
     }
 }
 
-function handleGetHelpRequest(intent, session, callback) {
+function handleGetHelpRequest(session, callback) {
     session.attributes.userPromptedToContinue = true;
     var speechOutput = "I will ask you " + GAME_LENGTH + " multiple choice questions. Respond with the number of the answer. "
             + "For example, say one, two, three, or four. To start a new game at any time, say, start game. "
@@ -433,7 +430,7 @@ function handleGetHelpRequest(intent, session, callback) {
         buildSpeechletResponseWithoutCard(speechOutput, repromptText, shouldEndSession));
 }
 
-function handleFinishSessionRequest(intent, session, callback) {
+function handleFinishSessionRequest(session, callback) {
     callback(session.attributes,
         buildSpeechletResponseWithoutCard("Good bye!", "", true));
 }
